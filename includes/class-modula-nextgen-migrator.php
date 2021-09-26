@@ -378,6 +378,7 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function modula_import_result( $success, $message, $modula_gallery_id = false ) {
+
 		echo json_encode( array(
 			'success'           => (bool) $success,
 			'message'           => (string) $message,
@@ -394,7 +395,9 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function clean_entries( $gallery_id ) {
+
 		global $wpdb;
+
 		$sql      = $wpdb->prepare( "DELETE FROM  " . $wpdb->prefix . "ngg_gallery WHERE gid = $gallery_id" );
 		$sql_meta = $wpdb->prepare( "DELETE FROM  " . $wpdb->prefix . "ngg_pictures WHERE galleryid = $gallery_id" );
 		$wpdb->query( $sql );
@@ -474,6 +477,8 @@ class Modula_Nextgen_Migrator {
 	 * @param $data
 	 *
 	 * @return mixed
+	 *
+	 * @since 1.0.0
 	 */
 	public function migrator_images( $images, $data ) {
 
@@ -497,10 +502,13 @@ class Modula_Nextgen_Migrator {
 	 * @param $gallery_id
 	 *
 	 * @return mixed
+	 *
+	 * @since 1.0.0
 	 */
 	public function attachments( $attachments, $images, $gallery_id ) {
 
 		global $wpdb;
+
 		$ajax_migrator = Modula_Ajax_Migrator::get_instance();
 
 		// Add each image to Media Library

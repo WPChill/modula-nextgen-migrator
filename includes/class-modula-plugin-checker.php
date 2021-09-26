@@ -155,10 +155,10 @@ if ( ! class_exists( 'Modula_Plugin_Checker' ) ) {
 				$url    = add_query_arg(
 					array(
 						'action'        => 'activate',
-						'plugin'        => rawurlencode( $this::_get_plugin_basename_from_slug( 'modula-nextgen-migrator' ) ),
+						'plugin'        => rawurlencode( $this::_get_plugin_basename_from_slug( 'modula-best-grid-gallery' ) ),
 						'plugin_status' => 'all',
 						'paged'         => '1',
-						'_wpnonce'      => wp_create_nonce( 'activate-plugin_' . $this::_get_plugin_basename_from_slug( 'modula-nextgen-migrator' ) ),
+						'_wpnonce'      => wp_create_nonce( 'activate-plugin_' . $this::_get_plugin_basename_from_slug( 'modula-best-grid-gallery' ) ),
 					),
 					admin_url( 'plugins.php' )
 				);
@@ -168,8 +168,7 @@ if ( ! class_exists( 'Modula_Plugin_Checker' ) ) {
 
 			echo '<div id="modula-install-lite" class="notice">';
 			echo '<h1>' . esc_html__( 'Install & Activate Modula Lite', 'modula-nextgen-migrator' ) . '</h1>';
-			echo '<h4>' . esc_html__( 'In order for Modula PRO to work properly, you\'ll also need to have Modula Lite installed & activated', 'modula-nextgen-migrator' ) . '</h4>';
-			echo '<a href="' . esc_url( $url ) . '" data-action="' . esc_attr( $action ) . '" class="button button-primary button-hero" id="install-modula-lite">' . esc_html( $label ) . '</a>';
+			echo '<h4>' . esc_html__( 'In order for the migrator to work properly, you\'ll also need to have Modula installed & activated', 'modula-nextgen-migrator' ) . '</h4>';			echo '<a href="' . esc_url( $url ) . '" data-action="' . esc_attr( $action ) . '" class="button button-primary button-hero" id="install-modula-lite">' . esc_html( $label ) . '</a>';
 			echo '</div>';
 		}
 	}
