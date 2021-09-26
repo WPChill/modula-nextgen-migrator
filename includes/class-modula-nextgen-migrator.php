@@ -22,7 +22,7 @@ class Modula_Nextgen_Migrator {
 	 */
 	public function __construct() {
 
-		require_once MODULA_EVIRA_MIGRATOR_PATH . 'includes/class-modula-plugin-checker.php';
+		require_once MODULA_NEXTGEN_MIGRATOR_PATH . 'includes/class-modula-plugin-checker.php';
 
 		if ( class_exists( 'Modula_Plugin_Checker' ) ) {
 
@@ -51,6 +51,7 @@ class Modula_Nextgen_Migrator {
 				add_filter( 'modula_source_galleries_nextgen', array( $this, 'add_source_galleries' ), 15, 1 );
 				add_filter( 'modula_g_gallery_nextgen', array( $this, 'add_gallery_info' ), 15, 3 );
 				add_filter( 'modula_migrator_images_nextgen', array( $this, 'migrator_images' ), 15, 2 );
+				add_filter( 'modula_migrate_attachments_nextgen', array( $this, 'attachments' ), 15, 3 );
 			}
 		}
 
@@ -486,6 +487,41 @@ class Modula_Nextgen_Migrator {
 
 		return $wpdb->get_results( $sql );
 
+	}
+
+	/**
+	 * Image attachments
+	 *
+	 * @param $attachments
+	 * @param $images
+	 * @param $gallery_id
+	 *
+	 * @return mixed
+	 */
+	public function attachments( $attachments, $images, $gallery_id ) {
+
+		global $wpdb;
+		$ajax_migrator = Modula_Ajax_Migrator::get_instance();
+
+		// Add each image to Media Library
+		foreach ( $images as $image ) {
+
+			// Store image in WordPress Media Library
+			$sql = $wpdb->prepare( "SELECT path, title, galdesc, pageid 
+    						FROM " . $wpdb->prefix . "ngg_gallery
+    						WHERE gid = %d
+    						LIMIT 1", $gallery_id );
+
+			$gallery    = $wpdb->get_row( $sql );
+			$attachment = $ajax_migrator->add_image_to_library( $gallery->path, $image->filename, $image->description, $image->alttext );
+
+			if ( $attachment !== false ) {
+				// Add to array of attachments
+				$attachments[] = $attachment;
+			}
+		}
+
+		return $attachments;
 	}
 
 }

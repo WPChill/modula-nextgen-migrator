@@ -139,8 +139,8 @@ if ( ! class_exists( 'Modula_Plugin_Checker' ) ) {
 		public function display_modula_notice() {
 
 			$check = array(
-				'installed' => $this::check_modula_is_installed( 'modula-best-grid-gallery' ),
-				'active'    => $this::check_modula_is_active( 'modula-best-grid-gallery' ),
+				'installed' => $this::check_modula_is_installed( 'modula-nextgen-migrator' ),
+				'active'    => $this::check_modula_is_active( 'modula-nextgen-migrator' ),
 			);
 
 			if ( ! $check['installed'] ) {
@@ -155,10 +155,10 @@ if ( ! class_exists( 'Modula_Plugin_Checker' ) ) {
 				$url    = add_query_arg(
 					array(
 						'action'        => 'activate',
-						'plugin'        => rawurlencode( $this::_get_plugin_basename_from_slug( 'modula-best-grid-gallery' ) ),
+						'plugin'        => rawurlencode( $this::_get_plugin_basename_from_slug( 'modula-nextgen-migrator' ) ),
 						'plugin_status' => 'all',
 						'paged'         => '1',
-						'_wpnonce'      => wp_create_nonce( 'activate-plugin_' . $this::_get_plugin_basename_from_slug( 'modula-best-grid-gallery' ) ),
+						'_wpnonce'      => wp_create_nonce( 'activate-plugin_' . $this::_get_plugin_basename_from_slug( 'modula-nextgen-migrator' ) ),
 					),
 					admin_url( 'plugins.php' )
 				);
