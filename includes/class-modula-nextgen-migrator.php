@@ -165,7 +165,7 @@ class Modula_Nextgen_Migrator {
 			check_ajax_referer( 'modula-importer', 'nonce' );
 
 			if ( ! isset( $_POST['id'] ) ) {
-				$this->modula_import_result( false, esc_html__( 'No gallery was selected', 'modula-nextgen-migrator' ), false );
+				$this->modula_import_result( false, esc_html__( 'No gallery was selected', 'migrate-away-from-nextgen' ), false );
 			}
 
 			$gallery_id = absint( $_POST['id'] );
@@ -178,7 +178,7 @@ class Modula_Nextgen_Migrator {
 			if ( isset( $_POST['clean'] ) && 'delete' == $_POST['clean'] ) {
 				$this->clean_entries( $gallery_id );
 			}
-			$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'modula-nextgen-migrator' ), false );
+			$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'migrate-away-from-nextgen' ), false );
 		}
 
 		if ( empty( $attachments ) ) {
@@ -186,7 +186,7 @@ class Modula_Nextgen_Migrator {
 			check_ajax_referer( 'modula-importer', 'nonce' );
 
 			if ( ! isset( $_POST['attachments'] ) ) {
-				$this->modula_import_result( false, esc_html__( 'There are no images to be imported', 'modula-nextgen-migrator' ), false );
+				$this->modula_import_result( false, esc_html__( 'There are no images to be imported', 'migrate-away-from-nextgen' ), false );
 			}
 
 			$attachments = $_POST['attachments'];
@@ -204,7 +204,7 @@ class Modula_Nextgen_Migrator {
 				if ( isset( $_POST['clean'] ) && 'delete' == $_POST['clean'] ) {
 					$this->clean_entries( $gallery_id );
 				}
-				$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'modula-best-grid-gallery' ), false );
+				$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'migrate-away-from-nextgen' ), false );
 			}
 		}
 
@@ -240,7 +240,7 @@ class Modula_Nextgen_Migrator {
 			if ( isset( $_POST['clean'] ) && 'delete' == $_POST['clean'] ) {
 				$this->clean_entries( $gallery_id );
 			}
-			$this->modula_import_result( false, esc_html__( 'No images found in gallery. Skipping gallery...', 'modula-best-grid-gallery' ), false );
+			$this->modula_import_result( false, esc_html__( 'No images found in gallery. Skipping gallery...', 'migrate-away-from-nextgen' ), false );
 		}
 
 		$ngg_settings = apply_filters( 'modula_migrate_gallery_data', array(
