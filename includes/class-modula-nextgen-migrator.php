@@ -172,7 +172,7 @@ class Modula_Nextgen_Migrator {
 
 		}
 
-		if ( isset( $_POST['imported'] ) && $_POST['imported'] ) {
+		if ( isset( $_POST['imported'] ) && sanitize_text_field( wp_unslash( $_POST['imported'] ) ) ) {
 
 			// Trigger delete function if option is set to delete
 			if ( isset( $_POST['clean'] ) && 'delete' == $_POST['clean'] ) {
@@ -188,8 +188,12 @@ class Modula_Nextgen_Migrator {
 			if ( ! isset( $_POST['attachments'] ) ) {
 				$this->modula_import_result( false, esc_html__( 'There are no images to be imported', 'migrate-away-from-nextgen' ), false );
 			}
+			
+			$attachments = array();
+			foreach( wp_unslash( $_POST['attachments'] ) as $attach ){
+				$attachments[] = array_map( 'sanitize_text_field', $attach );
+			}
 
-			$attachments = $_POST['attachments'];
 		}
 
 		$imported_galleries = get_option( 'modula_importer' );
@@ -336,7 +340,13 @@ class Modula_Nextgen_Migrator {
 	public function update_imported() {
 
 		check_ajax_referer( 'modula-importer', 'nonce' );
-		$galleries         = $_POST['galleries'];
+
+		if ( ! isset( $_POST['galleries'] ) ) {
+			wp_send_json_error();
+		}
+		
+		$galleries = array_map( 'absint', wp_unslash( $_POST['galleries'] ) );
+
 		$importer_settings = get_option( 'modula_importer' );
 
 		if ( ! is_array( $importer_settings ) ) {
