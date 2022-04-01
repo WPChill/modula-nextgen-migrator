@@ -188,7 +188,7 @@ class Modula_Nextgen_Migrator {
 			if ( ! isset( $_POST['attachments'] ) ) {
 				$this->modula_import_result( false, esc_html__( 'There are no images to be imported', 'migrate-away-from-nextgen' ), false );
 			}
-			
+
 			$attachments = array();
 			foreach( wp_unslash( $_POST['attachments'] ) as $attach ){
 				$attachments[] = array_map( 'sanitize_text_field', $attach );
@@ -205,7 +205,7 @@ class Modula_Nextgen_Migrator {
 			if ( 'modula-gallery' == $modula_gallery ) {
 
 				// Trigger delete function if option is set to delete
-				if ( isset( $_POST['clean'] ) && 'delete' == $_POST['clean'] ) {
+				if ( isset( $_POST['clean'] ) && 'delete' == sanitize_text_field( wp_unslash( $_POST['clean'] ) ) ) {
 					$this->clean_entries( $gallery_id );
 				}
 				$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'migrate-away-from-nextgen' ), false );
