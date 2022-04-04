@@ -32,6 +32,7 @@ class Modula_Nextgen_Migrator {
 
 				if ( is_admin() ) {
 					add_action( 'admin_notices', array( $modula_checker, 'display_modula_notice' ) );
+					add_action( 'plugins_loaded', array( $this, 'set_locale', 15 ) );
 				}
 
 			} else {
@@ -165,7 +166,7 @@ class Modula_Nextgen_Migrator {
 			check_ajax_referer( 'modula-importer', 'nonce' );
 
 			if ( ! isset( $_POST['id'] ) ) {
-				$this->modula_import_result( false, esc_html__( 'No gallery was selected', 'migrate-away-from-nextgen' ), false );
+				$this->modula_import_result( false, esc_html__( 'No gallery was selected', 'modula-nextgen-migrator' ), false );
 			}
 
 			$gallery_id = absint( $_POST['id'] );
@@ -178,7 +179,7 @@ class Modula_Nextgen_Migrator {
 			if ( isset( $_POST['clean'] ) && 'delete' == $_POST['clean'] ) {
 				$this->clean_entries( $gallery_id );
 			}
-			$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'migrate-away-from-nextgen' ), false );
+			$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'modula-nextgen-migrator' ), false );
 		}
 
 		if ( empty( $attachments ) ) {
@@ -186,7 +187,7 @@ class Modula_Nextgen_Migrator {
 			check_ajax_referer( 'modula-importer', 'nonce' );
 
 			if ( ! isset( $_POST['attachments'] ) ) {
-				$this->modula_import_result( false, esc_html__( 'There are no images to be imported', 'migrate-away-from-nextgen' ), false );
+				$this->modula_import_result( false, esc_html__( 'There are no images to be imported', 'modula-nextgen-migrator' ), false );
 			}
 
 			$attachments = array();
@@ -208,7 +209,7 @@ class Modula_Nextgen_Migrator {
 				if ( isset( $_POST['clean'] ) && 'delete' == sanitize_text_field( wp_unslash( $_POST['clean'] ) ) ) {
 					$this->clean_entries( $gallery_id );
 				}
-				$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'migrate-away-from-nextgen' ), false );
+				$this->modula_import_result( false, esc_html__( 'Gallery already migrated!', 'modula-nextgen-migrator' ), false );
 			}
 		}
 
@@ -244,7 +245,7 @@ class Modula_Nextgen_Migrator {
 			if ( isset( $_POST['clean'] ) && 'delete' == $_POST['clean'] ) {
 				$this->clean_entries( $gallery_id );
 			}
-			$this->modula_import_result( false, esc_html__( 'No images found in gallery. Skipping gallery...', 'migrate-away-from-nextgen' ), false );
+			$this->modula_import_result( false, esc_html__( 'No images found in gallery. Skipping gallery...', 'modula-nextgen-migrator' ), false );
 		}
 
 		$ngg_settings = apply_filters( 'modula_migrate_gallery_data', array(
@@ -540,6 +541,17 @@ class Modula_Nextgen_Migrator {
 		}
 
 		return $attachments;
+	}
+
+	/**
+	 * Set localization for the plugin
+	 *
+	 * @return void
+	 * @since 1.0.1
+	 */
+	public function set_locale() {
+
+		load_plugin_textdomain( 'modula-nextgen-migrator', false, dirname( plugin_basename( MODULA_NEXTGEN_MIGRATOR_FILE ) ) . '/languages/' );
 	}
 
 }

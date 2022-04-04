@@ -145,12 +145,12 @@ if ( ! class_exists( 'Modula_Plugin_Checker' ) ) {
 
 			if ( ! $check['installed'] ) {
 
-				$label  = esc_html__( 'Install & Activate: Modula Lite', 'migrate-away-from-nextgen' );
+				$label  = esc_html__( 'Install & Activate: Modula Lite', 'modula-nextgen-migrator' );
 				$action = 'install';
 				$url    = '#';
 			} else {
 
-				$label  = esc_html__( 'Activate: Modula Lite', 'migrate-away-from-nextgen' );
+				$label  = esc_html__( 'Activate: Modula Lite', 'modula-nextgen-migrator' );
 				$action = 'activate';
 				$url    = add_query_arg(
 					array(
@@ -167,8 +167,8 @@ if ( ! class_exists( 'Modula_Plugin_Checker' ) ) {
 			wp_enqueue_style( 'modula-nextgen-install-lite', MODULA_NEXTGEN_MIGRATOR_URL . 'assets/css/install-lite.css' );
 
 			echo '<div id="modula-install-lite" class="notice">';
-			echo '<h1>' . esc_html__( 'Install & Activate Modula Lite', 'migrate-away-from-nextgen' ) . '</h1>';
-			echo '<h4>' . esc_html__( 'In order for the migrator to work properly, you\'ll also need to have Modula installed & activated', 'migrate-away-from-nextgen' ) . '</h4>';			echo '<a href="' . esc_url( $url ) . '" data-action="' . esc_attr( $action ) . '" class="button button-primary button-hero" id="install-modula-lite">' . esc_html( $label ) . '</a>';
+			echo '<h1>' . esc_html__( 'Install & Activate Modula Lite', 'modula-nextgen-migrator' ) . '</h1>';
+			echo '<h4>' . esc_html__( 'In order for the migrator to work properly, you\'ll also need to have Modula installed & activated', 'modula-nextgen-migrator' ) . '</h4>';			echo '<a href="' . esc_url( $url ) . '" data-action="' . esc_attr( $action ) . '" class="button button-primary button-hero" id="install-modula-lite">' . esc_html( $label ) . '</a>';
 			echo '</div>';
 		}
 	}

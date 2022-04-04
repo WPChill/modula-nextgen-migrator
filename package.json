@@ -1,10 +1,10 @@
 {
 	"name": "modula-nextgen-migrator",
 	"main": "Gruntfile.js",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"author": "Macho Themes",
 	"license": "GPL v3",
-	"repository": "https://github.com/machothemes/simple-author-box.git",
+	"repository": "https://github.com/machothemes/modula-nextgen-migrator.git",
 	"scripts": {
 		"build": "webpack",
 		"watch": "webpack --watch",

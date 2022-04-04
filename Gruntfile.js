@@ -14,7 +14,7 @@ module.exports = function( grunt ) {
 		checktextdomain: {
 			standard: {
 				options: {
-					text_domain: [ 'migrate-away-from-nextgen' ], //Specify allowed domain(s)
+					text_domain: [ 'modula-nextgen-migrator' ], //Specify allowed domain(s)
 					create_report_file: 'true',
 					keywords: [ //List keyword specifications
 						'__:1,2d',
@@ -53,7 +53,7 @@ module.exports = function( grunt ) {
 	                include: [],                      // List of files or directories to include.
 	                mainFile: 'migrate-away-from-nextgen.php',                     // Main project file.
 	                potComments: '',                  // The copyright at the beginning of the POT file.
-	                potFilename: 'migrate-away-from-nextgen.po',                  // Name of the POT file.
+	                potFilename: 'modula-nextgen-migrator.po',                  // Name of the POT file.
 	                potHeaders: {
 	                    poedit: true,                 // Includes common Poedit headers.
 	                    'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
@@ -72,7 +72,7 @@ module.exports = function( grunt ) {
 	                include: [],                      // List of files or directories to include.
 	                mainFile: 'migrate-away-from-nextgen.php',                     // Main project file.
 	                potComments: '',                  // The copyright at the beginning of the POT file.
-	                potFilename: 'migrate-away-from-nextgen.pot',                  // Name of the POT file.
+	                potFilename: 'modula-nextgen-migrator.pot',                  // Name of the POT file.
 	                potHeaders: {
 	                    poedit: true,                 // Includes common Poedit headers.
 	                    'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
@@ -129,7 +129,7 @@ module.exports = function( grunt ) {
 					'!postcss.config.js',
 					'!webpack.config.js',
 					'!set_tags.sh',
-					'!modula-deeplink.zip',
+					'!modula-nextgen-migrator.zip',
 					'!old/**',
 					'!nbproject/**'
 				],
