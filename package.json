@@ -2,9 +2,9 @@
 	"name": "modula-nextgen-migrator",
 	"main": "Gruntfile.js",
 	"version": "1.0.1",
-	"author": "Macho Themes",
+	"author": "WPChill",
 	"license": "GPL v3",
-	"repository": "https://github.com/machothemes/modula-nextgen-migrator.git",
+	"repository": "https://github.com/wpchill/modula-nextgen-migrator.git",
 	"scripts": {
 		"build": "webpack",
 		"watch": "webpack --watch",
