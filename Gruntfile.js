@@ -129,7 +129,7 @@ module.exports = function( grunt ) {
 					'!postcss.config.js',
 					'!webpack.config.js',
 					'!set_tags.sh',
-					'!modula-nextgen-migrator.zip',
+					'!*.zip',
 					'!old/**',
 					'!nbproject/**'
 				],
@@ -161,7 +161,7 @@ module.exports = function( grunt ) {
 			build: {
 				options: {
 					pretty: true,                           // Pretty print file sizes when logging.
-					archive: '<%= pkg.name %>.zip'
+					archive: '<%= pkg.name %>-<%= pkg.version %>.zip'
 				},
 				expand: true,
 				cwd: 'build/',
