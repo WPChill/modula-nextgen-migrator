@@ -1,4 +1,5 @@
 <?php
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,22 +22,17 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-
 		require_once MODULA_NEXTGEN_MIGRATOR_PATH . 'includes/class-modula-plugin-checker.php';
 
 		if ( class_exists( 'Modula_Plugin_Checker' ) ) {
-
 			$modula_checker = Modula_Plugin_Checker::get_instance();
 
 			if ( ! $modula_checker->check_for_modula() ) {
-
 				if ( is_admin() ) {
 					add_action( 'admin_notices', array( $modula_checker, 'display_modula_notice' ) );
 					add_action( 'plugins_loaded', array( $this, 'set_locale', 15 ) );
 				}
-
 			} else {
-
 				// Add AJAX
 				add_action( 'wp_ajax_modula_importer_nextgen_gallery_import', array(
 					$this,
@@ -55,7 +51,6 @@ class Modula_Nextgen_Migrator {
 				add_filter( 'modula_migrate_attachments_nextgen', array( $this, 'attachments' ), 15, 3 );
 			}
 		}
-
 	}
 
 	/**
@@ -64,13 +59,11 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public static function get_instance() {
-
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Modula_Nextgen_Migrator ) ) {
 			self::$instance = new Modula_Nextgen_Migrator();
 		}
 
 		return self::$instance;
-
 	}
 
 
@@ -82,7 +75,6 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function get_galleries() {
-
 		global $wpdb;
 		$empty_galleries = array();
 
@@ -90,7 +82,7 @@ class Modula_Nextgen_Migrator {
 			return false;
 		}
 
-		$galleries = $wpdb->get_results( " SELECT * FROM " . $wpdb->prefix . "ngg_gallery" );
+		$galleries = $wpdb->get_results( ' SELECT * FROM ' . $wpdb->prefix . 'ngg_gallery' );
 		if ( count( $galleries ) != 0 ) {
 			foreach ( $galleries as $key => $gallery ) {
 				$count = $this->images_count( $gallery->gid );
@@ -129,9 +121,9 @@ class Modula_Nextgen_Migrator {
 	public function images_count( $id ) {
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "SELECT COUNT(pid) FROM " . $wpdb->prefix . "ngg_pictures
-    						WHERE galleryid = %d ",
-			$id );
+		$sql = $wpdb->prepare( 'SELECT COUNT(pid) FROM ' . $wpdb->prefix . 'ngg_pictures
+    						WHERE galleryid = %d ',
+		                       $id );
 
 		$images = $wpdb->get_results( $sql );
 		$count  = get_object_vars( $images[0] );
@@ -144,14 +136,13 @@ class Modula_Nextgen_Migrator {
 	/**
 	 * Imports a gallery from NextGEN into Modula
 	 *
-	 * @param string $gallery_id
+	 * @param  string  $gallery_id
 	 *
-	 * @param string $attachments
+	 * @param  string  $attachments
 	 *
 	 * @since 1.0.0
 	 */
 	public function nextgen_gallery_import( $gallery_id = '', $attachments = '' ) {
-
 		global $wpdb;
 		$modula_importer = Modula_Importer::get_instance();
 
@@ -161,7 +152,6 @@ class Modula_Nextgen_Migrator {
 
 		// If no gallery ID, get from AJAX request
 		if ( empty( $gallery_id ) ) {
-
 			// Run a security check first.
 			check_ajax_referer( 'modula-importer', 'nonce' );
 
@@ -170,11 +160,9 @@ class Modula_Nextgen_Migrator {
 			}
 
 			$gallery_id = absint( $_POST['id'] );
-
 		}
 
 		if ( isset( $_POST['imported'] ) && sanitize_text_field( wp_unslash( $_POST['imported'] ) ) ) {
-
 			// Trigger delete function if option is set to delete
 			if ( isset( $_POST['clean'] ) && 'delete' == $_POST['clean'] ) {
 				$this->clean_entries( $gallery_id );
@@ -191,20 +179,30 @@ class Modula_Nextgen_Migrator {
 			}
 
 			$attachments = array();
-			foreach( wp_unslash( $_POST['attachments'] ) as $attach ){
-				$attachments[] = array_map( 'sanitize_text_field', $attach );
+			foreach ( wp_unslash( $_POST['attachments'] ) as $attach ) {
+				foreach ( $attach as $key => $value ) {
+					switch ( $key ) {
+						case 'ID':
+							$attach['ID'] = absint( $value );
+							break;
+						case 'caption':
+							$attach['caption'] = wp_filter_post_kses( $value );
+							break;
+						default:
+							$attach[ $key ] = sanitize_text_field( $value );
+							break;
+					}
+				}
+				$attachments[] = array_map( 'wp_kses_post', $attach );
 			}
-
 		}
 
 		$imported_galleries = get_option( 'modula_importer' );
 
 		if ( isset( $imported_galleries['galleries']['nextgen'][ $gallery_id ] ) ) {
-
 			$modula_gallery = get_post_type( $imported_galleries['galleries']['nextgen'][ $gallery_id ] );
 			// If already migrated don't migrate
 			if ( 'modula-gallery' == $modula_gallery ) {
-
 				// Trigger delete function if option is set to delete
 				if ( isset( $_POST['clean'] ) && 'delete' == sanitize_text_field( wp_unslash( $_POST['clean'] ) ) ) {
 					$this->clean_entries( $gallery_id );
@@ -214,19 +212,19 @@ class Modula_Nextgen_Migrator {
 		}
 
 		// Get image path
-		$sql2 = $wpdb->prepare( "SELECT post_content 
-                            FROM " . $wpdb->prefix . "posts
+		$sql2 = $wpdb->prepare( 'SELECT post_content 
+                            FROM ' . $wpdb->prefix . 'posts
                             WHERE post_title = %s
-                            LIMIT 1",
-			'NextGEN Basic Thumbnails' );
+                            LIMIT 1',
+		                        'NextGEN Basic Thumbnails' );
 
 		$data_settings = json_decode( base64_decode( $wpdb->get_row( $sql2 )->post_content ) );
 
-		$sql     = $wpdb->prepare( "SELECT path, title, galdesc, pageid 
-    						FROM " . $wpdb->prefix . "ngg_gallery
+		$sql     = $wpdb->prepare( 'SELECT path, title, galdesc, pageid 
+    						FROM ' . $wpdb->prefix . 'ngg_gallery
     						WHERE gid = %d
-    						LIMIT 1",
-			$gallery_id );
+    						LIMIT 1',
+		                           $gallery_id );
 		$gallery = $wpdb->get_row( $sql );
 
 		$col_number = $data_settings->settings->number_of_columns;
@@ -251,7 +249,7 @@ class Modula_Nextgen_Migrator {
 		$ngg_settings = apply_filters( 'modula_migrate_gallery_data', array(
 			'type'      => 'grid',
 			'grid_type' => $col_number
-		), $data_settings, 'nextgen' );
+		),                             $data_settings, 'nextgen' );
 
 		// Get Modula Gallery defaults, used to set modula-settings metadata
 		$modula_settings = wp_parse_args( $ngg_settings, Modula_CPT_Fields_Helper::get_defaults() );
@@ -272,16 +270,15 @@ class Modula_Nextgen_Migrator {
 				'width'       => 2,
 				'height'      => 2,
 				'filters'     => ''
-			), $attachment, $data_settings, 'nextgen' );
+			),                                $attachment, $data_settings, 'nextgen' );
 		}
-
 
 		// Create Modula CPT
 		$modula_gallery_id = wp_insert_post( array(
-			'post_type'   => 'modula-gallery',
-			'post_status' => 'publish',
-			'post_title'  => sanitize_text_field( $gallery->title ),
-		) );
+			                                     'post_type'   => 'modula-gallery',
+			                                     'post_status' => 'publish',
+			                                     'post_title'  => sanitize_text_field( $gallery->title ),
+		                                     ) );
 
 		// Attach meta modula-settings to Modula CPT
 		update_post_meta( $modula_gallery_id, 'modula-settings', $modula_settings );
@@ -295,12 +292,12 @@ class Modula_Nextgen_Migrator {
 		$modula_shortcode    = '[modula id="' . $modula_gallery_id . '"]';
 
 		// Replace NextGEN shortcode with Modula Shortcode in Posts, Pages and CPTs
-		$sql   = $wpdb->prepare( "UPDATE " . $wpdb->prefix . "posts SET post_content = REPLACE(post_content, '%s', '%s')",
-			$nextgen_shortcode, $modula_shortcode );
-		$sql_2 = $wpdb->prepare( "UPDATE " . $wpdb->prefix . "posts SET post_content = REPLACE(post_content, '%s', '%s')",
-			$nextgen_shortcode_2, $modula_shortcode );
-		$sql_3 = $wpdb->prepare( "UPDATE " . $wpdb->prefix . "posts SET post_content = REPLACE(post_content, '%s', '%s')",
-			$nextgen_shortcode_3, $modula_shortcode );
+		$sql   = $wpdb->prepare( 'UPDATE ' . $wpdb->prefix . "posts SET post_content = REPLACE(post_content, '%s', '%s')",
+		                         $nextgen_shortcode, $modula_shortcode );
+		$sql_2 = $wpdb->prepare( 'UPDATE ' . $wpdb->prefix . "posts SET post_content = REPLACE(post_content, '%s', '%s')",
+		                         $nextgen_shortcode_2, $modula_shortcode );
+		$sql_3 = $wpdb->prepare( 'UPDATE ' . $wpdb->prefix . "posts SET post_content = REPLACE(post_content, '%s', '%s')",
+		                         $nextgen_shortcode_3, $modula_shortcode );
 
 		$wpdb->query( $sql );
 		$wpdb->query( $sql_2 );
@@ -339,13 +336,12 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function update_imported() {
-
 		check_ajax_referer( 'modula-importer', 'nonce' );
 
 		if ( ! isset( $_POST['galleries'] ) ) {
 			wp_send_json_error();
 		}
-		
+
 		$galleries = array_map( 'absint', wp_unslash( $_POST['galleries'] ) );
 
 		$importer_settings = get_option( 'modula_importer' );
@@ -389,12 +385,11 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function modula_import_result( $success, $message, $modula_gallery_id = false ) {
-
 		echo json_encode( array(
-			'success'           => (bool) $success,
-			'message'           => (string) $message,
-			'modula_gallery_id' => $modula_gallery_id
-		) );
+			                  'success'           => (bool) $success,
+			                  'message'           => (string) $message,
+			                  'modula_gallery_id' => $modula_gallery_id
+		                  ) );
 		die;
 	}
 
@@ -406,11 +401,10 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function clean_entries( $gallery_id ) {
-
 		global $wpdb;
 
-		$sql      = $wpdb->prepare( "DELETE FROM  " . $wpdb->prefix . "ngg_gallery WHERE gid = $gallery_id" );
-		$sql_meta = $wpdb->prepare( "DELETE FROM  " . $wpdb->prefix . "ngg_pictures WHERE galleryid = $gallery_id" );
+		$sql      = $wpdb->prepare( 'DELETE FROM  ' . $wpdb->prefix . "ngg_gallery WHERE gid = $gallery_id" );
+		$sql_meta = $wpdb->prepare( 'DELETE FROM  ' . $wpdb->prefix . "ngg_pictures WHERE galleryid = $gallery_id" );
 		$wpdb->query( $sql );
 		$wpdb->query( $sql_meta );
 	}
@@ -424,11 +418,10 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function add_source( $sources ) {
-
 		global $wpdb;
 
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '" . $wpdb->prefix . "ngg_gallery'" ) ) {
-			$nextgen = $wpdb->get_results( " SELECT COUNT(gid) FROM " . $wpdb->prefix . "ngg_gallery" );
+			$nextgen = $wpdb->get_results( ' SELECT COUNT(gid) FROM ' . $wpdb->prefix . 'ngg_gallery' );
 		}
 
 		$nextgen_return = ( null != $nextgen ) ? get_object_vars( $nextgen[0] ) : false;
@@ -449,7 +442,6 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function add_source_galleries( $galleries ) {
-
 		return $this->get_galleries();
 	}
 
@@ -464,7 +456,6 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function add_gallery_info( $g_gallery, $gallery, $import_settings ) {
-
 		$modula_gallery = get_post_type( $import_settings['galleries']['nextgen'][ $gallery->ID ] );
 		$imported       = false;
 
@@ -492,17 +483,15 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function migrator_images( $images, $data ) {
-
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "SELECT * FROM " . $wpdb->prefix . "ngg_pictures
+		$sql = $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . 'ngg_pictures
     						WHERE galleryid = %d
     						ORDER BY sortorder ASC,
-    						imagedate ASC",
-			$data );
+    						imagedate ASC',
+		                       $data );
 
 		return $wpdb->get_results( $sql );
-
 	}
 
 	/**
@@ -517,19 +506,17 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.0
 	 */
 	public function attachments( $attachments, $images, $gallery_id ) {
-
 		global $wpdb;
 
 		$ajax_migrator = Modula_Ajax_Migrator::get_instance();
 
 		// Add each image to Media Library
 		foreach ( $images as $image ) {
-
 			// Store image in WordPress Media Library
-			$sql = $wpdb->prepare( "SELECT path, title, galdesc, pageid 
-    						FROM " . $wpdb->prefix . "ngg_gallery
+			$sql = $wpdb->prepare( 'SELECT path, title, galdesc, pageid 
+    						FROM ' . $wpdb->prefix . 'ngg_gallery
     						WHERE gid = %d
-    						LIMIT 1", $gallery_id );
+    						LIMIT 1', $gallery_id );
 
 			$gallery    = $wpdb->get_row( $sql );
 			$attachment = $ajax_migrator->add_image_to_library( $gallery->path, $image->filename, $image->description, $image->alttext );
@@ -550,7 +537,6 @@ class Modula_Nextgen_Migrator {
 	 * @since 1.0.1
 	 */
 	public function set_locale() {
-
 		load_plugin_textdomain( 'modula-nextgen-migrator', false, dirname( plugin_basename( MODULA_NEXTGEN_MIGRATOR_FILE ) ) . '/languages/' );
 	}
 

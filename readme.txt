@@ -4,7 +4,7 @@ Tags: nextgen gallery migrator, migrate to Modula, gallery migrator, migrate fro
 Requires at least: 5.2
 Tested up to: 6.6
 Requires PHP: 5.6
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GNU General Public License v3.0 or later
 
 Migrate away from NextGEN Gallery is the official migrator from NextGEN Gallery to Modula Gallery
