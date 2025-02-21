@@ -147,7 +147,10 @@ if ( ! class_exists( 'Modula_Plugin_Checker' ) ) {
 
 				$label  = esc_html__( 'Install & Activate: Modula Lite', 'modula-nextgen-migrator' );
 				$action = 'install';
-				$url    = '#';
+				$url    = wp_nonce_url(
+					self_admin_url( 'update.php?action=install-plugin&plugin=modula-best-grid-gallery' ),
+					'install-plugin_modula-best-grid-gallery'
+				);
 			} else {
 
 				$label  = esc_html__( 'Activate: Modula Lite', 'modula-nextgen-migrator' );

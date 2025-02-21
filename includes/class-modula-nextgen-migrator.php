@@ -30,7 +30,7 @@ class Modula_Nextgen_Migrator {
 			if ( ! $modula_checker->check_for_modula() ) {
 				if ( is_admin() ) {
 					add_action( 'admin_notices', array( $modula_checker, 'display_modula_notice' ) );
-					add_action( 'plugins_loaded', array( $this, 'set_locale', 15 ) );
+					add_action( 'plugins_loaded', array( $this, 'set_locale' ), 15 );
 				}
 			} else {
 				// Add AJAX
@@ -370,7 +370,7 @@ class Modula_Nextgen_Migrator {
 			$url = admin_url( 'edit.php?post_type=modula-gallery&page=modula&modula-tab=importer&migration=complete&delete=complete' );
 		}
 
-		echo $url;
+		echo esc_url( $url );
 		wp_die();
 	}
 
@@ -419,12 +419,13 @@ class Modula_Nextgen_Migrator {
 	 */
 	public function add_source( $sources ) {
 		global $wpdb;
+		$nextgen = false;
 
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '" . $wpdb->prefix . "ngg_gallery'" ) ) {
 			$nextgen = $wpdb->get_results( ' SELECT COUNT(gid) FROM ' . $wpdb->prefix . 'ngg_gallery' );
 		}
 
-		$nextgen_return = ( null != $nextgen ) ? get_object_vars( $nextgen[0] ) : false;
+		$nextgen_return = ( null != $nextgen && isset( $nextgen[0] ) ) ? get_object_vars( $nextgen[0] ) : false;
 
 		if ( $nextgen && null != $nextgen && ! empty( $nextgen ) && $nextgen_return && '0' != $nextgen_return['COUNT(gid)'] ) {
 			$sources['nextgen'] = 'NextGEN Gallery';
